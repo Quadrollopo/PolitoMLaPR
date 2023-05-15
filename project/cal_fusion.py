@@ -1,5 +1,5 @@
 import numpy as np
-from tiblib import load_wine
+from tiblib import load_fingerprint
 from tiblib.model_selection import Calibrate
 from tiblib.classification import QuadraticLogisticRegression, GaussianClassifier
 from tiblib.classification import GaussianMixtureClassifier, SVC, Pipeline
@@ -7,7 +7,7 @@ from tiblib.preprocessing import Gaussianizer, StandardScaler, PCA
 
 print('Calibration')
 
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 
 g = Gaussianizer()
 ss = StandardScaler()
@@ -41,7 +41,7 @@ print('Fusion')
 
 from tiblib.model_selection import Fusion
 
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 
 model_names = ['svm2', 'qlr1', 'gmm1']
 scores = []
@@ -55,7 +55,7 @@ np.save(f'results/fusion_scores_{"_".join(model_names)}', fused_score)
 
 from tiblib.model_selection import Fusion
 
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 
 model_names = ['svm2', 'qlr1']
 scores = []
@@ -70,7 +70,7 @@ np.save(f'results/fusion_scores_{"_".join(model_names)}', fused_score)
 
 from tiblib.model_selection import Fusion
 
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 
 model_names = ['svm2', 'gmm1']
 scores = []
@@ -85,7 +85,7 @@ np.save(f'results/fusion_scores_{"_".join(model_names)}', fused_score)
 
 from tiblib.model_selection import Fusion
 
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 
 model_names = ['qlr1', 'gmm1']
 scores = []

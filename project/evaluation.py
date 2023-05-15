@@ -1,5 +1,5 @@
 import numpy as np
-from tiblib import load_wine
+from tiblib import load_fingerprint
 from tiblib.classification import QuadraticLogisticRegression, SVC, GaussianMixtureClassifier, Pipeline
 from tiblib.preprocessing import StandardScaler
 from tiblib import min_detection_cost_func, detection_cost_func
@@ -8,7 +8,7 @@ from tiblib.model_selection.cv import calibrate
 
 print('Uncalibrated models')
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 pi = 0.5
 ss = StandardScaler()
 qlr = QuadraticLogisticRegression(l=1e-3)
@@ -35,7 +35,7 @@ for m, n in zip(models, names):
 print('Calibrated models')
 
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 pi = 0.5
 ss = StandardScaler()
 qlr = QuadraticLogisticRegression(l=1e-3)
@@ -69,7 +69,7 @@ print('Fusion uncalibrated')
 
 from tiblib.classification import LogisticRegression
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 pi = 0.5
 ss = StandardScaler()
 qlr = QuadraticLogisticRegression(l=1e-3)
@@ -114,7 +114,7 @@ print('Fusion calibrated')
 
 from tiblib.classification import LogisticRegression
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 pi = 0.5
 ss = StandardScaler()
 qlr = QuadraticLogisticRegression(l=1e-3)

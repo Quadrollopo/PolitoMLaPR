@@ -1,5 +1,5 @@
 
-from tiblib import load_wine
+from tiblib import load_fingerprint
 from tiblib.model_selection import grid_cv_multiprior
 from tiblib.preprocessing import Gaussianizer, StandardScaler, PCA
 
@@ -9,7 +9,7 @@ print('GMM')
 
 from tiblib.classification import GaussianMixtureClassifier
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 
 model = GaussianMixtureClassifier
 hyperparams = {'tied':[False, True],

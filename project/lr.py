@@ -1,5 +1,5 @@
 
-from tiblib import load_wine
+from tiblib import load_fingerprint
 from tiblib.model_selection import grid_cv_multiprior
 from tiblib.preprocessing import Gaussianizer, StandardScaler, PCA
 from tiblib.classification import LogisticRegression
@@ -9,7 +9,7 @@ from tiblib.classification import QuadraticLogisticRegression
 print('Logistic Regression')
 
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 
 model = LogisticRegression
 hyperparams = {'l':[1e-1, 1e-2, 1e-3, 1e-4]}
@@ -38,7 +38,7 @@ for pr in preprocessings:
 
 print('Quadratic Logistic Regression')
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 
 model = QuadraticLogisticRegression
 hyperparams = {'l':[1e-1, 1e-2, 1e-3, 1e-4]}

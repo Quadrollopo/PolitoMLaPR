@@ -1,4 +1,4 @@
-from tiblib import load_wine
+from tiblib import load_fingerprint
 from tiblib.model_selection import grid_cv_multiprior
 from tiblib.preprocessing import Gaussianizer, StandardScaler, PCA
 from tiblib.classification import SVC
@@ -7,7 +7,7 @@ from tiblib.classification import SVC
 print('SVM')
 
 
-X_train, X_test, y_train, y_test = load_wine()
+X_train, X_test, y_train, y_test = load_fingerprint()
 
 model = SVC
 hyperparams = {'C':[1e-1, 1e-2, 1e-3, 1e-4],

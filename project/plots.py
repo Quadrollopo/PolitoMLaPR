@@ -137,9 +137,9 @@ print('DCF Curves - Uncalibrated vs Calibrated')
 
 from tiblib.visualization import multiplot_dcf
 import numpy as np
-from tiblib import load_wine
+from tiblib import load_fingerprint
 print('Running...')
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 scores = []
 model_names = ['svm2', 'qlr1', 'gmm1']
 plot_names = ['SVM ($C = 1$, $ \log \gamma =-1 $) with StandardScaler',
@@ -153,9 +153,9 @@ multiplot_dcf(scores, y_train, plot_names=plot_names, filename=f'dcf_best_uncal'
 
 from tiblib.visualization import multiplot_dcf
 import numpy as np
-from tiblib import load_wine
+from tiblib import load_fingerprint
 print('Running...')
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 scores = []
 model_names = ['svm2', 'qlr1', 'gmm1']
 plot_names = ['SVM ($C = 1$, $ \log \gamma =-1 $) with StandardScaler',
@@ -171,9 +171,9 @@ print('DCF Curves - Fusions')
 
 from tiblib.visualization import multiplot_dcf
 import numpy as np
-from tiblib import load_wine
+from tiblib import load_fingerprint
 print('Running...')
-X_train, _, y_train, _ = load_wine()
+X_train, _, y_train, _ = load_fingerprint()
 scores = []
 model_names = ['svm2_qlr1_gmm1', 'svm2_qlr1', 'svm2_gmm1', 'qlr1_gmm1']
 plot_names = ['QLR + SVM + GMM',
@@ -191,7 +191,7 @@ print('DCF Curves - Evaluation')
 from tiblib.visualization import multiplot_dcf
 import numpy as np
 print('Running...')
-_, _, _, y_test = load_wine()
+_, _, _, y_test = load_fingerprint()
 
 scores = []
 model_names = ['QLR', 'SVM', 'GMM', 'fusion_QLR_SVM_GMM']
@@ -205,7 +205,7 @@ multiplot_dcf(scores, y_test, plot_names=plot_names, filename=f'dcf_eval_uncal',
 from tiblib.visualization import multiplot_dcf
 import numpy as np
 print('Running...')
-_, _, _, y_test = load_wine()
+_, _, _, y_test = load_fingerprint()
 
 scores = []
 model_names = ['QLR', 'SVM', 'GMM', 'fusion_QLR_SVM_GMM']
@@ -219,10 +219,10 @@ multiplot_dcf(scores, y_test, plot_names=plot_names, filename=f'dcf_eval_cal', s
 print('ROC Curve - Evaluation')
 
 import numpy as np
-from tiblib import load_wine
+from tiblib import load_fingerprint
 from tiblib.visualization import plot_roc
 
-_, _, _, y_test = load_wine()
+_, _, _, y_test = load_fingerprint()
 
 scores = []
 model_names = ['QLR', 'SVM', 'GMM', 'fusion_QLR_SVM_GMM']
