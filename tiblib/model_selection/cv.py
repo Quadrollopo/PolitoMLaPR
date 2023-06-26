@@ -56,8 +56,8 @@ def CVMinDCF(model, X, y, K=5, pi=.5, calibration=False, _lambda=1e-3):
             val_scores = calibrate(val_scores, val_scores, y_val, _lambda, pi)
         scores[val_indices] = val_scores
 
-    min_dcf, _ = min_detection_cost_func(scores, y, pi=pi)
-    act_dcf = detection_cost_func(scores, y, pi=pi)
+    min_dcf, _ = min_detection_cost_func(scores, y, pi=pi, cfp = 10.)
+    act_dcf = detection_cost_func(scores, y, pi=pi,  cfp = 10.)
     return min_dcf, act_dcf, scores
 
 

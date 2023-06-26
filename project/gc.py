@@ -13,8 +13,8 @@ hyperparams = {'tied':[False, True],
 
 gaussianizer = Gaussianizer()
 scaler = StandardScaler()
-pca1 = PCA(n_dims=9)
-pca2 = PCA(n_dims=5)
+pca1 = PCA(n_dims=7)
+pca2 = PCA(n_dims=9)
 preprocessings = [
     [],
     [gaussianizer],
@@ -25,7 +25,7 @@ preprocessings = [
     [gaussianizer, scaler, pca2],
 ]
 prefix = 'gc'
-pis = [0.1, 0.5, 0.9]
+pis = [0.5]
 for pr in preprocessings:
     if len(pr) > 0:
         filename = '_'.join([str(p) for p in pr])

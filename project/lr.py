@@ -17,7 +17,7 @@ hyperparams = {'l':[1e-1, 1e-2, 1e-3, 1e-4]}
 gaussianizer = Gaussianizer()
 scaler = StandardScaler()
 pca1 = PCA(n_dims=9)
-pca2 = PCA(n_dims=5)
+pca2 = PCA(n_dims=7)
 preprocessings = [
     [],
     [scaler],
@@ -25,7 +25,7 @@ preprocessings = [
     [scaler, pca2]
 ]
 prefix = 'lr'
-pis = [0.1, 0.5, 0.9]
+pis = [0.5]
 for pr in preprocessings:
     if len(pr) > 0:
         filename = '_'.join([str(p) for p in pr])
@@ -46,15 +46,16 @@ hyperparams = {'l':[1e-1, 1e-2, 1e-3, 1e-4]}
 gaussianizer = Gaussianizer()
 scaler = StandardScaler()
 pca1 = PCA(n_dims=9)
-pca2 = PCA(n_dims=5)
+lda = LDA(n_dims = 9)
+pca2 = PCA(n_dims=7)
 preprocessings = [
     [],
     [scaler],
     [scaler, pca1],
     [scaler, pca2]
 ]
-prefix = 'lr'
-pis = [0.1, 0.5, 0.9]
+prefix = 'lr_quad'
+pis = [0.5]
 for pr in preprocessings:
     if len(pr) > 0:
         filename = '_'.join([str(p) for p in pr])
