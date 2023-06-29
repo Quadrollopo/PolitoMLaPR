@@ -41,7 +41,7 @@ class SVC(ClassifierBase):
 		if self.kernel == 'linear':
 			self.k = x_r.T @ x_r
 		else:
-			self.k = self._kern(X, X, self.kernel)
+			self.k = self._kern(X, X)
 		self.z = np.where(y == 1, 1, -1)
 		H = self.k * self.z.reshape((-1, 1)) * self.z
 
@@ -53,7 +53,7 @@ class SVC(ClassifierBase):
 		bounds = self._define_bounds(X, y)
 
 		# Optimize the primal variables using scipy's fmin_l_bfgs_b function
-		self.alpha = fmin_l_bfgs_b(objective, alpha, bounds=bounds, approx_grad=False, factr=1.)[0]
+		self.alpha = fmin_l_bfgs_b(objective, alpha, bounds=bounds, approx_grad=False, factr=1e6)[0]
 
 		res = np.sum(self.alpha * self.z * x_r, 1)
 		self.b = res[-1]
@@ -77,17 +77,15 @@ class SVC(ClassifierBase):
 			bounds[y == 0, 1] = Cf
 		return bounds
 
-	def _kern(self, x1, x2, ker_type):
-		if ker_type == 'poly':
+	def _kern(self, x1, x2):
+		if self.kernel == 'poly':
 			return np.power(x1.T @ x2 + self.c, self.d) + self.K ** 2
-		elif ker_type == 'radial':
+		elif self.kernel == 'radial':
 			# return np.exp(-self.gamma * np.square(np.linalg.norm(x1.T-x2.T))) + self.K ** 2
-			kern = np.zeros([x1.shape[1], x2.shape[1]])
-			for i in range(x1.shape[1]):
-				for j in range(x2.shape[1]):
-					norm = ((x1[:, i] - x2[:, j]) ** 2).sum()
-					kern[i, j] = np.exp(-self.gamma * norm) + self.K
-			return kern
+			a = np.repeat(x1, x2.shape[1], axis = 1)
+			b = np.tile(x2, x1.shape[1])
+			m = (np.linalg.norm(a - b, axis = 0) ** 2).reshape((x1.shape[1], x2.shape[1]))
+			return np.exp(-self.gamma * m) + self.K
 		else:
 			raise ValueError(f"{self.kernel} is not a valid kernel type, valid types are: 'linear', 'poly', 'radial'")
 
@@ -95,5 +93,5 @@ class SVC(ClassifierBase):
 		if self.kernel == 'linear':
 			score = self.W.T @ X.T + self.b * self.C
 		else:
-			score = (self.alpha * self.z) @ self._kern(self.x, X.T, self.kernel)
+			score = (self.alpha * self.z) @ self._kern(self.x, X.T)
 		return score
