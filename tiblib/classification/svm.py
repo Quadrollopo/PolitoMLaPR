@@ -4,7 +4,7 @@ from tiblib import ClassifierBase
 
 
 class SVC(ClassifierBase):
-	def __init__(self, C=1.0, K=1.0, kernel='linear', c=0, d=0, gamma=0, pi=0.5):
+	def __init__(self, C=1.0, K=1.0, kernel='linear', c=2, d=1, gamma=0.1, pi=0.5):
 		assert kernel == 'linear' or kernel == 'radial' or kernel == 'poly', f"{kernel} is not a valid kernel type, valid types are: 'linear', 'poly', 'radial'"
 		self.x = None
 		self.k = None
