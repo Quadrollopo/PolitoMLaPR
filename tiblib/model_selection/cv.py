@@ -14,7 +14,7 @@ def calibrate(score_train, y_train, _lambda, pi=0.5):
     # score = lr.predict_scores(score_test.reshape(-1,1), get_ratio=True)
     alpha = lr.w
     beta_p = lr.b
-    cal_score = (alpha @ score_train.T) + beta_p - np.log(pi / (1 - pi))
+    cal_score = (alpha @ score_train.reshape(1,-1)) + beta_p - np.log(pi / (1 - pi))
     return cal_score
 
 
@@ -53,7 +53,7 @@ def CVMinDCF(model, X, y, K=5, pi=.5, calibration=False, _lambda=1e-3):
         model.fit(X_train, y_train)
         val_scores = model.predict_scores(X_val, get_ratio=True)
         if calibration:
-            val_scores = calibrate(val_scores, val_scores, y_val, _lambda, pi)
+            val_scores = calibrate(val_scores, y_val, _lambda, pi)
         scores[val_indices] = val_scores
 
     min_dcf, _ = min_detection_cost_func(scores, y, pi=pi, cfp = 10.)
@@ -98,7 +98,7 @@ def CVFusion(models, X, y, K=5, pi=.5, _lambda=1e-3):
     return min_dcf, act_dcf, fused_score
 
 
-def Calibrate(model, X, y, K=5, pi=.5, _lambda=1e-3):
+def Calibrate(model, X, y, K=5, pi=.5, _lambda=1e-2):
     if X.shape[0] < X.shape[1]:
         warnings.warn(f'Samples in X should be rows. Are you sure the dataset is not transposed? Size: {X.shape}')
     scores = np.empty(X.shape[0]) # Will store scores for the KFold
@@ -117,7 +117,7 @@ def Calibrate(model, X, y, K=5, pi=.5, _lambda=1e-3):
         model.fit(X_train, y_train)
         val_scores = model.predict_scores(X_val, get_ratio=True)
         scores[val_indices] = val_scores
-        val_scores = calibrate(val_scores, val_scores, y_val, _lambda, pi)
+        val_scores = calibrate(val_scores, y_val, _lambda, pi)
         cal_scores[val_indices] = val_scores
     min_dcf, _ = min_detection_cost_func(scores, y, pi=pi)
     act_dcf = detection_cost_func(scores, y, pi=pi)
