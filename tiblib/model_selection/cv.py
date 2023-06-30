@@ -8,13 +8,13 @@ from tiblib import min_detection_cost_func, detection_cost_func
 from tiblib.classification import LogisticRegression, Pipeline
 
 
-def calibrate(score_train, score_test, y_train, _lambda, pi=0.5):
+def calibrate(score_train, y_train, _lambda, pi=0.5):
     lr = LogisticRegression(l=_lambda)
     lr.fit(score_train.reshape(-1,1), y_train)
-    score = lr.predict_scores(score_test.reshape(-1,1), get_ratio=True)
+    # score = lr.predict_scores(score_test.reshape(-1,1), get_ratio=True)
     alpha = lr.w
     beta_p = lr.b
-    cal_score = alpha * score + beta_p - np.log(pi / (1 - pi))
+    cal_score = (alpha @ score_train.T) + beta_p - np.log(pi / (1 - pi))
     return cal_score
 
 
