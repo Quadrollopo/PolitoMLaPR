@@ -146,23 +146,23 @@ def logpdf_GMM(X, gmm):
     responsibilities = np.exp(logscores - loglikelihood)
     return loglikelihood, responsibilities
 
-def empirical_bayes_risk(cm, pi=.5, cfn=1, cfp=1):
+def empirical_bayes_risk(cm, pi=.5, cfn=1, cfp=10):
     with np.errstate(invalid='ignore'):
         fnr = cm[0, 1] / (cm[0, 1] + cm[1, 1])
         fpr = cm[1, 0] / (cm[1, 0] + cm[0, 0])
     return pi * cfn * fnr + (1 - pi) * cfp * fpr
 
 
-def normalized_det_cost_func(cm, pi=.5, cfn=1, cfp=1):
+def normalized_det_cost_func(cm, pi=.5, cfn=1, cfp=10):
     dcf = empirical_bayes_risk(cm, pi, cfn, cfp)
     return dcf / min(pi * cfn, (1 - pi) * cfp)
 
-def optimal_bayes_decision(score, pi=.5, cfn=1, cfp=1):
+def optimal_bayes_decision(score, pi=.5, cfn=1, cfp=10):
     threshold = - np.log(pi / (1 - pi)) + np.log(cfn / cfp)
     return (score > threshold).astype(int)
 
 
-def detection_cost_func(score, y_true, pi=.5, cfn=1, cfp=1):
+def detection_cost_func(score, y_true, pi=.5, cfn=1, cfp=10):
     opt_decision = optimal_bayes_decision(score, pi, cfn, cfp)
     cm = confusion_matrix(y_true, opt_decision)
 
@@ -178,7 +178,7 @@ def confusion_matrix(y_true, y_pred):
             matrix[i, j] = np.sum((y_pred == i) & (y_true == j))
     return matrix
 
-def min_detection_cost_func(score, y_true, pi=.5, cfn=1, cfp=1):
+def min_detection_cost_func(score, y_true, pi=.5, cfn=1, cfp=10):
     min_dcf = np.inf
     opt_t = 0
 
