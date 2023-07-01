@@ -91,7 +91,7 @@ class SVC(ClassifierBase):
 
 	def predict_scores(self, X, get_ratio=False):
 		if self.kernel == 'linear':
-			score = self.W.T @ X.T + self.b * self.C
+			score = self.W.T @ X.T + self.b * self.K
 		else:
 			score = (self.alpha * self.z) @ self._kern(self.x, X.T)
 		return score
