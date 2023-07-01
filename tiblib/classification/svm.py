@@ -79,7 +79,7 @@ class SVC(ClassifierBase):
 
 	def _kern(self, x1, x2):
 		if self.kernel == 'poly':
-			return np.power(x1.T @ x2 + self.c, self.d) + self.K ** 2
+			return np.power(x1.T @ x2 + self.c, self.d) + self.K
 		elif self.kernel == 'radial':
 			# return np.exp(-self.gamma * np.square(np.linalg.norm(x1.T-x2.T))) + self.K ** 2
 			a = np.repeat(x1, x2.shape[1], axis = 1)
