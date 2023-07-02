@@ -1,38 +1,30 @@
 import numpy as np
 from tiblib import load_fingerprint
 from tiblib.model_selection import Calibrate
-from tiblib.classification import QuadraticLogisticRegression, GaussianClassifier
+from tiblib.classification import QuadraticLogisticRegression
 from tiblib.classification import GaussianMixtureClassifier, SVC, Pipeline
 from tiblib.preprocessing import Gaussianizer, StandardScaler, PCA
 
 print('Calibration')
 
-X_train, _, y_train, _ = load_fingerprint()
-
-g = Gaussianizer()
+X_train, X_test, y_train, y_test = load_fingerprint()
+pi = 0.9
 ss = StandardScaler()
-pca = PCA(n_dims=9)
-gc = GaussianClassifier()
-qrl = QuadraticLogisticRegression(l=1e-3)
-svm1 = SVC(kernel='radial', gamma=1/np.e**2, C=10)
-svm2 = SVC(kernel='radial', gamma=1/np.e, C=1)
-gmm1 = GaussianMixtureClassifier(n_components=8)
-gmm2 = GaussianMixtureClassifier(n_components=16, tied=True)
+qlr = QuadraticLogisticRegression(l=1e-2)
+svm = SVC(kernel='radial', C=.1, gamma=np.exp(-2))
+pca = PCA(9)
+g = Gaussianizer()
+gmm = GaussianMixtureClassifier(n_components=8, tied = True)
 
-model1 = Pipeline(g, gc)
-model2 = Pipeline([ss, pca], gc)
-model3 = Pipeline([ss], qrl)
-model4 = Pipeline([ss, pca], qrl)
-model5 = Pipeline(ss, svm1)
-model6 = Pipeline(ss, svm2)
-model7 = Pipeline(ss, gmm1)
-model8 = Pipeline(g, gmm2)
+model1 = Pipeline([ss, pca], qlr)
+model2 = Pipeline(g, svm)
+model3 = Pipeline([], gmm)
 
-models = [model1, model2, model3, model4, model5, model6, model7, model8]
-names = ['gc1', 'gc2', 'qlr1', 'qlr2', 'svm1', 'svm2', 'gmm1', 'gmm2']
+models = [model1, model2, model3]
+names = ['qlr1', 'svm1', 'gmm1']
 
 for n, m in zip(names, models):
-    min_dcf, act_dcf, cal_dcf, scores, cal_scores = Calibrate(m, X_train, y_train)
+    min_dcf, act_dcf, cal_dcf, scores, cal_scores = Calibrate(m, X_train, y_train, pi = 0.9)
     print(f'{n} & {min_dcf:.3f} & {act_dcf:.3f} & {cal_dcf:.3f}')
     np.save(f'results/scores_{n}', scores)
     np.save(f'results/cal_scores_{n}', cal_scores)
@@ -43,7 +35,7 @@ from tiblib.model_selection import Fusion
 
 X_train, _, y_train, _ = load_fingerprint()
 
-model_names = ['svm2', 'qlr1', 'gmm1']
+model_names = ['svm1', 'qlr1', 'gmm1']
 scores = []
 for n in model_names:
     scores.append(np.load(f'results/cal_scores_{n}.npy').reshape(-1,1))
@@ -57,7 +49,7 @@ from tiblib.model_selection import Fusion
 
 X_train, _, y_train, _ = load_fingerprint()
 
-model_names = ['svm2', 'qlr1']
+model_names = ['svm1', 'qlr1']
 scores = []
 for n in model_names:
     scores.append(np.load(f'results/cal_scores_{n}.npy').reshape(-1,1))
@@ -72,7 +64,7 @@ from tiblib.model_selection import Fusion
 
 X_train, _, y_train, _ = load_fingerprint()
 
-model_names = ['svm2', 'gmm1']
+model_names = ['svm1', 'gmm1']
 scores = []
 for n in model_names:
     scores.append(np.load(f'results/cal_scores_{n}.npy').reshape(-1,1))

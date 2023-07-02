@@ -4,7 +4,7 @@ from tiblib.classification import QuadraticLogisticRegression, SVC, GaussianMixt
 from tiblib.preprocessing import StandardScaler, PCA, Gaussianizer
 from tiblib import min_detection_cost_func, detection_cost_func
 from tiblib.model_selection import CVMinDCF
-from tiblib.model_selection.cv import calibrate, Calibrate
+from tiblib.model_selection.cv import calibrate
 
 # region Uncalibrated models
 print('Uncalibrated models')
