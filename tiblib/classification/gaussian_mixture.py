@@ -125,7 +125,7 @@ class GaussianMixtureModel:
 
 
 class GaussianMixtureClassifier(ClassifierBase):
-    def __init__(self, algorithm='lbg', tied=False, diag=False, n_components=3, max_iter=10, alpha=0.1, psi=1e-3, stop_delta=1e-6):
+    def __init__(self, algorithm='lbg', tied=False, diag=False, n_components=3, max_iter=10, alpha=1.0, psi=1e-3, stop_delta=1e-6):
         self.tied = tied
         self.diag = diag
         self.psi = psi

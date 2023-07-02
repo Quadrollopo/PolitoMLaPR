@@ -8,7 +8,7 @@ from tiblib import min_detection_cost_func, detection_cost_func
 from tiblib.classification import LogisticRegression, Pipeline
 
 
-def calibrate(score_train, y_train, _lambda, pi=0.5):
+def calibrate(score_train, y_train, _lambda, pi=0.9):
     lr = LogisticRegression(l=_lambda)
     lr.fit(score_train.reshape(-1,1), y_train)
     # score = lr.predict_scores(score_test.reshape(-1,1), get_ratio=True)
@@ -56,8 +56,8 @@ def CVMinDCF(model, X, y, K=5, pi=.5, calibration=False, _lambda=1e-3):
             val_scores = calibrate(val_scores, y_val, _lambda, pi)
         scores[val_indices] = val_scores
 
-    min_dcf, _ = min_detection_cost_func(scores, y, pi=pi, cfp = 10.)
-    act_dcf = detection_cost_func(scores, y, pi=pi,  cfp = 10.)
+    min_dcf, _ = min_detection_cost_func(scores, y, pi=pi, cfp = 10)
+    act_dcf = detection_cost_func(scores, y, pi=pi,  cfp = 10)
     return min_dcf, act_dcf, scores
 
 
@@ -98,7 +98,7 @@ def CVFusion(models, X, y, K=5, pi=.5, _lambda=1e-3):
     return min_dcf, act_dcf, fused_score
 
 
-def Calibrate(model, X, y, K=5, pi=.5, _lambda=1e-2):
+def Calibrate(model, X, y, K=5, pi=.5, _lambda=1e-3):
     if X.shape[0] < X.shape[1]:
         warnings.warn(f'Samples in X should be rows. Are you sure the dataset is not transposed? Size: {X.shape}')
     scores = np.empty(X.shape[0]) # Will store scores for the KFold
@@ -125,7 +125,7 @@ def Calibrate(model, X, y, K=5, pi=.5, _lambda=1e-2):
     return min_dcf, act_dcf, cal_dcf, scores, cal_scores
 
 
-def Fusion(scores, y, K=5, pi=.5, _lambda=1e-3):
+def Fusion(scores, y, K=5, pi=.9, _lambda=1e-3):
     assert scores.shape[1] > 1, 'Fusion needs at least 2 models to work'
     if scores.shape[0] < scores.shape[1]:
         warnings.warn(f'Samples in X should be rows. Are you sure the dataset is not transposed? Size: {scores.shape}')

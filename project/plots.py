@@ -4,8 +4,8 @@ print('Logistic Regression')
 import matplotlib.pyplot as plt
 import pandas as pd
 
-filenames = ['no_preproc', 'StandardScaler', 'StandardScaler_PCA (d=9)', 'StandardScaler_PCA (d=5)']
-titles = ['No preprocessing', 'StandardScaler', 'StandardScaler, PCA ($d=9$)', 'StandardScaler, PCA ($d=5$)']
+filenames = ['no_preproc', 'StandardScaler', 'StandardScaler_PCA (d=9)', 'StandardScaler_PCA (d=7)']
+titles = ['No preprocessing', 'StandardScaler', 'StandardScaler, PCA ($d=9$)', 'StandardScaler, PCA ($d=7$)']
 fig, axs = plt.subplots(2,2)
 fig.set_figheight(10)
 fig.set_figwidth(15)
@@ -13,10 +13,10 @@ fig.tight_layout(pad=3)
 fig.set_dpi(600)
 for ax, prep, t in zip(axs.reshape(-1), filenames, titles):
     d1 = pd.read_csv(f'results/results_lr_{prep}.csv')
-    d2 = pd.read_csv(f'results/results_qlr_{prep}.csv')
+    d2 = pd.read_csv(f'results/results_lr_quad_{prep}.csv')
 
-    d1 = d1[d1['Prior'] == 0.5][['l','Min DCF']]
-    d2 = d2[d2['Prior'] == 0.5][['l','Min DCF']]
+    d1 = d1[d1['Prior'] == 0.9][['l','Min DCF']]
+    d2 = d2[d2['Prior'] == 0.9][['l','Min DCF']]
 
     ax.set_ylim([0.25, 0.45])
     ax.title.set_text(t)
@@ -43,7 +43,7 @@ fig.set_dpi(600)
 fig.delaxes(axs[1][1])
 for ax, prep, t in zip(axs.reshape(-1), filenames, titles):
     d = pd.read_csv(f'results/results_gmm_{prep}.csv')
-    d = d[(d['Prior'] == 0.5) & (d['alpha'] == 1)][['Min DCF', 'n_components','tied','diag']]
+    d = d[(d['Prior'] == 0.9) & (d['alpha'] == 1)][['Min DCF', 'n_components','tied','diag']]
 
     dF = d[(d['tied'] == False) & (d['diag'] == False)]
     dD = d[(d['tied'] == False) & (d['diag'] == True)]
@@ -81,11 +81,11 @@ fig.set_dpi(600)
 fig.delaxes(axs[1][1])
 for ax, prep, t in zip(axs.reshape(-1), filenames, titles):
     d1 = pd.read_csv(f'results/results_svm_{prep}.csv')
-    d2 = pd.read_csv(f'results/results_svm_rbf_{prep}.csv')
+    d2 = pd.read_csv(f'results/results_svm_radial_{prep}.csv')
 
-    dlin = d1[(d1['Prior'] == 0.5) & (d1['kernel'] == 'linear')][['Min DCF', 'C']]
-    dpoly = d1[(d1['Prior'] == 0.5) & (d1['kernel'] == 'poly')][['Min DCF', 'C']]
-    drbf = d2[(d2['Prior'] == 0.5) & (d2['gamma'] == 0.1353352832366127)][['Min DCF', 'C']]
+    dlin = d1[(d1['Prior'] == 0.9) & (d1['kernel'] == 'linear')][['Min DCF', 'C']]
+    dpoly = d1[(d1['Prior'] == 0.9) & (d1['kernel'] == 'poly')][['Min DCF', 'C']]
+    drbf = d2[(d2['Prior'] == 0.9) & (d2['gamma'] == 0.1353352832366127)][['Min DCF', 'C']]
 
     ax.title.set_text(t)
     ax.set_xlabel('C', fontsize=12)
@@ -114,11 +114,11 @@ fig.tight_layout(pad=5)
 fig.set_dpi(600)
 fig.delaxes(axs[1][1])
 for ax, prep, t in zip(axs.reshape(-1), filenames, titles):
-    d = pd.read_csv(f'results/results_svm_rbf_{prep}.csv')
+    d = pd.read_csv(f'results/results_svm_radial_{prep}.csv')
 
-    dg1 = d[(d['Prior'] == 0.5) & (d['gamma'] == 0.3678794411714423)][['Min DCF', 'C']]
-    dg2 = d[(d['Prior'] == 0.5) & (d['gamma'] == 0.1353352832366127)][['Min DCF', 'C']]
-    dg3 = d[(d['Prior'] == 0.5) & (d['gamma'] == 0.0497870683678639)][['Min DCF', 'C']]
+    dg1 = d[(d['Prior'] == 0.9) & (d['gamma'] == 0.3678794411714423)][['Min DCF', 'C']]
+    dg2 = d[(d['Prior'] == 0.9) & (d['gamma'] == 0.1353352832366127)][['Min DCF', 'C']]
+    dg3 = d[(d['Prior'] == 0.9) & (d['gamma'] == 0.0497870683678639)][['Min DCF', 'C']]
 
     ax.title.set_text(t)
     ax.set_xlabel('C (log scale)', fontsize=12)
@@ -141,15 +141,15 @@ from tiblib import load_fingerprint
 print('Running...')
 X_train, _, y_train, _ = load_fingerprint()
 scores = []
-model_names = ['svm2', 'qlr1', 'gmm1']
-plot_names = ['SVM ($C = 1$, $ \log \gamma =-1 $) with StandardScaler',
-              'QLR with StandardScaler',
-              'GMM Full Covariance ($C = 8$) with StandardScaler']
+model_names = ['svm1', 'qlr1', 'gmm1', 'gmm2']
+plot_names = ['SVM ($C = 0.1$, $ \log \gamma =-2 $) with Gaussianizer',
+              'QLR with StandardScaler and PCA ($d = 9$)',
+              'GMM tied ($C = 8$)',
+              'GMM tied ($C = 8$) with Gaussianizer']
 for n in model_names:
     scores.append(np.load(f'results/scores_{n}.npy').reshape(-1,1))
 scores = np.concatenate(scores, axis=1)
 multiplot_dcf(scores, y_train, plot_names=plot_names, filename=f'dcf_best_uncal', save=True)
-
 
 from tiblib.visualization import multiplot_dcf
 import numpy as np
@@ -157,10 +157,11 @@ from tiblib import load_fingerprint
 print('Running...')
 X_train, _, y_train, _ = load_fingerprint()
 scores = []
-model_names = ['svm2', 'qlr1', 'gmm1']
-plot_names = ['SVM ($C = 1$, $ \log \gamma =-1 $) with StandardScaler',
-              'QLR with StandardScaler',
-              'GMM Full Covariance ($C = 8$) with StandardScaler']
+model_names = ['svm1', 'qlr1', 'gmm1', 'gmm2']
+plot_names = ['SVM ($C = 0.1$, $ \log \gamma =-2 $) with Gaussianizer',
+              'QLR with StandardScaler and PCA ($d = 9$)',
+              'GMM tied ($C = 8$)',
+              'GMM tied ($C = 8$) with Gaussianizer']
 for n in model_names:
     scores.append(np.load(f'results/cal_scores_{n}.npy').reshape(-1,1))
 scores = np.concatenate(scores, axis=1)
@@ -175,7 +176,7 @@ from tiblib import load_fingerprint
 print('Running...')
 X_train, _, y_train, _ = load_fingerprint()
 scores = []
-model_names = ['svm2_qlr1_gmm1', 'svm2_qlr1', 'svm2_gmm1', 'qlr1_gmm1']
+model_names = ['svm1_qlr1_gmm1', 'svm1_qlr1', 'svm1_gmm1', 'qlr1_gmm1']
 plot_names = ['QLR + SVM + GMM',
               'QLR + SVM',
               'SVM + GMM',
@@ -190,6 +191,7 @@ print('DCF Curves - Evaluation')
 
 from tiblib.visualization import multiplot_dcf
 import numpy as np
+from tiblib import load_fingerprint
 print('Running...')
 _, _, _, y_test = load_fingerprint()
 
@@ -204,6 +206,7 @@ multiplot_dcf(scores, y_test, plot_names=plot_names, filename=f'dcf_eval_uncal',
 
 from tiblib.visualization import multiplot_dcf
 import numpy as np
+from tiblib import load_fingerprint
 print('Running...')
 _, _, _, y_test = load_fingerprint()
 

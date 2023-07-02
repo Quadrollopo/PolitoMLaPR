@@ -108,7 +108,7 @@ def plot_roc(scores_pred, y_true, names, filename=None):
 
     plt.xlabel("False Positive Ratio")
     plt.ylabel("True Positive Ratio")
-    plt.grid(b=True)
+    plt.grid(visible=True)
     for s, n in zip(scores_pred, names):
         sorted_scores = np.sort(s)
         fpr = np.zeros(sorted_scores.shape[0])

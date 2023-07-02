@@ -1,3 +1,5 @@
+import numpy as np
+
 from tiblib import load_fingerprint
 from tiblib.model_selection import grid_cv_multiprior
 from tiblib.preprocessing import Gaussianizer, StandardScaler, PCA
@@ -10,14 +12,14 @@ print('SVM')
 X_train, X_test, y_train, y_test = load_fingerprint()
 
 model = SVC
-hyperparams = {'C':[1e-1, 1e-2, 1e-3, 1e-4],
+hyperparams = {'C':[1e-1, 1e-2, 1e-3], 'gamma': {np.exp(-1), np.exp(-2), np.exp(-3)},
                'kernel': ['linear', 'poly', 'radial']}
 prefix = 'svm'
 pis = [0.1, 0.5, 0.9]
 gaussianizer = Gaussianizer()
 scaler = StandardScaler()
 pca1 = PCA(n_dims=9)
-pca2 = PCA(n_dims=5)
+# pca2 = PCA(n_dims=5)
 preprocessings = [
     [],
     [gaussianizer],

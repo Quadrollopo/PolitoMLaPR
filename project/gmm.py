@@ -14,14 +14,13 @@ X_train, X_test, y_train, y_test = load_fingerprint()
 model = GaussianMixtureClassifier
 hyperparams = {'tied':[False, True],
                'diag':[False, True],
-               'n_components':[4,8,16],
-               'alpha':[0.1, 0.5, 1]}
+               'n_components':[4, 8, 16],
+               'alpha':[1]}
 prefix = 'gmm'
 pis = [0.1, 0.5, 0.9]
 gaussianizer = Gaussianizer()
 scaler = StandardScaler()
-pca1 = PCA(n_dims=9)
-pca2 = PCA(n_dims=5)
+# pca1 = PCA(n_dims=9)
 preprocessings = [
     [],
     [gaussianizer],
